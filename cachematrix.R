@@ -13,24 +13,24 @@ makeCacheMatrix <- function(x = matrix()) {
                 inv <<- NULL
         }
         get <- function() x             ## create get function
-        setinverse <- function(solve) inv <<- solve     ##create setinverse function that solves matrix for inverse and stores results in 'inv'
-        getinverse <- function() inv    ## create get function to retrieve cached data
-        list(set = set, get = get,      ## create list of variables each set to previously created functions
+        setinverse <- function(solve) inv <<- solve     ##create setinverse function that super assigns inverse results to 'inv'
+        getinverse <- function() inv    ## create get function to retrieve cached inverse
+        list(set = set, get = get,      ## create list of variables each set to a previously created functions
              setinverse = setinverse,
              getinverse = getinverse)
- }
+}
 
 
-## cacheSolve will return cached matrix inverse of 'x' if it exists or solve , set and display matrix inverse of 'x' 
+## cacheSolve will return cached matrix inverse if it exists or solve, set and display the matrix inverse  
 
 cacheSolve <- function(x, ...) {
-        inv <- x$getinverse()           ## Get variable 'inv' value
-        if(!is.null(inv)){              ## 'inv' not null implies that a cached inverse exists  
+        inv <- x$getinverse()           ## Get variable 'inv' value from makeCacheMatrix
+        if(!is.null(inv)){              ## test 'inv' for NULL value, not NULL implies that a cached inverse exists  
                 message("getting cached matrix inverse")        #display message indicating cached return
-                return(inv)             ## Return a matrix that is the inverse of 'x'
+                return(inv)             ## Returns the cached matrix inverse
         }
-        cachedmatrixinv <- x$get()      ## 'inv' is null, call get command via makeCacheMatrix list function - get
-        inv <- solve(cachedmatrixinv, ...)      ## local variable 'inv' is set to the inverse of non-previously-cached Matrix
-        x$setinverse(inv)               ## set matrix inverse to cache via makeCacheMatrix List function - set
-        inv                             ## print local 'inv' - not previously cached matrix inverse results
+        matrixinv <- x$get()            ## call get command via makeCacheMatrix list function - 'get()'
+        inv <- solve(matrixinv, ...)    ## solve inverse of matrix and store in local variable 'inv'
+        x$setinverse(inv)               ## set solved matrix inverse 'inv' to cache via setinverse() function from makeCacheMatrix
+        inv                             ## display 'inv'
 }
